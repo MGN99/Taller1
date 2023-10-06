@@ -19,6 +19,10 @@ public:
         historial.push_back(pagina);
     }
     void mostrarUltimas10Paginas() const;
+
+    void mostrarInformacion() const override {
+    cout << "Nombre: " << getNombre() << ", Tipo: Navegador" << ", Historial de paginas: " << historial.size() << " paginas visitadas" << endl;
+}
     
 };
     
@@ -29,7 +33,7 @@ public:
 
     void Navegador::mostrarUltimas10Paginas() const {
     int numPaginasMostradas = 0;
-    cout << "Últimas 10 páginas visitadas:" << endl;
+    cout << "Ultimas 10 paginas visitadas:" << endl;
 
     // Recorremos el historial desde el final hacia el principio y mostramos las últimas 10 páginas
     for (auto it = historial.rbegin(); it != historial.rend() && numPaginasMostradas < 10; ++it) {

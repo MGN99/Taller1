@@ -83,7 +83,7 @@ class Software {
 
     // Setter para establecer la lista de usuarios
     void Software::establecerUsuarios(const list<Usuario>& usu) {
-        cout<<"guardado"<<endl;
+        
         this->usuarios = usu;
     }
 

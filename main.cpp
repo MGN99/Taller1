@@ -17,6 +17,8 @@ void poblarBaseDeDatosUsuarios(list<Usuario>& );
 void mostrarInformacionUsuarios(const list<Usuario>&);
 void poblarBaseDeDatosSoftware(vector<Software*>&,const list<Usuario>&);
 void mostrarInformacionSoftwares(vector<Software*>&);
+bool iniciarSesion(const list<Usuario>&,vector<Software*>&);
+void menuAdmin(vector<Software*>&,const list<Usuario>&);
 
 int main()
 {
@@ -32,8 +34,12 @@ int main()
 
     // Se pobla la base de datos con softwares
     poblarBaseDeDatosSoftware(listaSoftware,listaUsuarios);
+    //mostrarInformacionSoftwares(listaSoftware);
+
+    iniciarSesion(listaUsuarios,listaSoftware);
+
     
-    mostrarInformacionSoftwares(listaSoftware);
+    
     return 0;
 }
 
@@ -82,187 +88,346 @@ void poblarBaseDeDatosUsuarios(list<Usuario>& listaUsuarios) {
 
 void mostrarInformacionUsuarios(const list<Usuario>& listaUsuarios){
     // Imprimir los usuarios en la lista
-    for (const Usuario& usuario : listaUsuarios) {
-         
-    }
+    
     cout << "Usuarios guardados en la base de datos con exito!"<<endl;
 }
 
 void poblarBaseDeDatosSoftware(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuarios) {
     //Creamos 20 Softwares de tipo Juego.
-    Juego juego1("Juego1", "epic", "+18", 99.9, "MMO");
-    juego1.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&juego1);
+    Juego* juego1 = new Juego("Juego1", "epic", "+18", 99.9, "MMO");
+    juego1->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego1);
     
-    Juego juego2("Juego2","riot","R",19,"MMO");
-    juego2.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&juego2);
+    Juego* juego2 = new Juego("Juego2", "riot", "R", 19, "MMO");
+    juego2->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego2);
 
-    Juego juego3("Juego3","ABC","13",5.75,"PUZZLE");
-    juego3.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&juego3);
+    Juego* juego3 = new Juego("Juego3", "ABC", "13", 5.75, "PUZZLE");
+    juego3->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego3);
 
-    Juego juego4("Juego4","RFL","16",12,"PUZZLE");
-    juego4.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&juego4);
+    Juego* juego4 = new Juego("Juego4", "RFL", "16", 12, "PUZZLE");
+    juego4->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego4);
 
-    Juego juego5("Juego5","riot","7",8,"FPS");
-    juego5.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&juego5);
+    Juego* juego5 = new Juego("Juego5", "riot", "7", 8, "FPS");
+    juego5->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego5);
 
-    Juego juego6("Juego6","KONAMI","+18",20.50,"FPS");
-    juego6.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&juego6);
+    Juego* juego6 = new Juego("Juego6", "KONAMI", "+18", 20.50, "FPS");
+    juego6->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego6);
 
-    Juego juego7("Juego7","KONAMI","+18",10.90,"Accion");
-    juego7.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&juego7);
+    Juego* juego7 = new Juego("Juego7", "KONAMI", "+18", 10.90, "Accion");
+    juego7->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego7);
 
-    Juego juego8("Juego8","KONAMI","+18",14.50,"Accion");
-    juego8.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&juego8);
+    Juego* juego8 = new Juego("Juego8", "KONAMI", "+18", 14.50, "Accion");
+    juego8->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego8);
 
-    Juego Juego9("Juego9","PXL","7",4.99,"Aventura");
-    Juego9.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego9);
+    Juego* juego9 = new Juego("Juego9", "PXL", "7", 4.99, "Aventura");
+    juego9->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego9);
 
-    Juego Juego10("Juego10","EA","13",29,"Aventura");
-    Juego10.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego10);
+    Juego* juego10 = new Juego("Juego10", "EA", "13", 29, "Aventura");
+    juego10->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego10);
 
-    Juego Juego11("Juego11","EA","R",5.99,"Deporte");
-    Juego11.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego11);
+    Juego* juego11 = new Juego("Juego11", "EA", "R", 5.99, "Deporte");
+    juego11->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego11);
 
-    Juego Juego12("Juego12","NOX","12",12,"Deporte");
-    Juego12.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego12);
+    Juego* juego12 = new Juego("Juego12", "NOX", "12", 12, "Deporte");
+    juego12->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego12);
 
-    Juego Juego13("Juego13","NOX","16",10,"Musical");
-    Juego13.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego13);
+    Juego* juego13 = new Juego("Juego13", "NOX", "16", 10, "Musical");
+    juego13->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego13);
 
-    Juego Juego14("Juego14","riot","16",14.50,"Musical");
-    Juego14.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego14);
+    Juego* juego14 = new Juego("Juego14", "riot", "16", 14.50, "Musical");
+    juego14->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego14);
 
-    Juego Juego15("Juego15","NOX","17",26.99,"Horror");
-    Juego15.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego15);
+    Juego* juego15 = new Juego("Juego15", "NOX", "17", 26.99, "Horror");
+    juego15->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego15);
 
-    Juego Juego16("Juego16","KONAMI","17",11.75,"Horror");
-    Juego16.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego16);
+    Juego* juego16 = new Juego("Juego16", "KONAMI", "17", 11.75, "Horror");
+    juego16->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego16);
 
-    Juego Juego17("Juego17","ABC","17",3.50,"Simulacion");
-    Juego17.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego17);
+    Juego* juego17 = new Juego("Juego17", "ABC", "17", 3.50, "Simulacion");
+    juego17->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego17);
 
-    Juego Juego18("Juego18","RFL","17",7,"Simulacion");
-    Juego18.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego18);
+    Juego* juego18 = new Juego("Juego18", "RFL", "17", 7, "Simulacion");
+    juego18->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego18);
 
-    Juego Juego19("Juego19","riot","16",12.40,"Misterio");
-    Juego19.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego19);
+    Juego* juego19 = new Juego("Juego19", "riot", "16", 12.40, "Misterio");
+    juego19->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego19);
 
-    Juego Juego20("Juego20","KONAMI","13",9.99,"Misterio");
-    Juego20.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&Juego20);
+    Juego* juego20 = new Juego("Juego20", "KONAMI", "13", 9.99, "Misterio");
+    juego20->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(juego20);
+    // Softwares de tipo Ofimatica
+    Ofimatica* of1 = new Ofimatica("Of1", "CHL", "15", 20.50, 0);
+    of1->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(of1);
 
-    //Se crean 5 softwares de tipo Ofimatica
+    Ofimatica* of2 = new Ofimatica("of2", "RLX", "12", 12, 0);
+    of2->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(of2);
 
-    Ofimatica of1("Of1","CHL","15",20.50,0);
-    of1.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&of1);
+    Ofimatica* of3 = new Ofimatica("of3", "KIOS", "17", 8.99, 0);
+    of3->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(of3);
 
-    Ofimatica of2("of2","RLX","12",12,0);
-    of2.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&of2);
+    Ofimatica* of4 = new Ofimatica("of4", "AXX", "R", 14.50, 0);
+    of4->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(of4);
 
-    Ofimatica of3("of3","KIOS","17",8.99,0);
-    of3.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&of3);
+    Ofimatica* of5 = new Ofimatica("of5", "RAGN", "7", 1.99, 0);
+    of5->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(of5);
 
-    Ofimatica of4("of4","AXX","R",14.50,0);
-    of4.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&of4);
+    // Softwares de tipo Produccion
+    Produccion* pr1 = new Produccion("pr1", "YGO", "+18", 30.99, "Video");
+    pr1->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(pr1);
 
-    Ofimatica of5("of5","RAGN","7",1.99,0);
-    of5.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&of5);
+    Produccion* pr2 = new Produccion("pr2", "ZGR", "+18", 22, "Musica");
+    pr2->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(pr2);
 
-    //Se crea 4 Softwares de tipo Produccion
+    Produccion* pr3 = new Produccion("pr3", "CROSSYX", "+18", 50.50, "Streaming");
+    pr3->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(pr3);
+
+    Produccion* pr4 = new Produccion("pr4", "NOIP", "+18", 7.25, "Fotos");
+    pr4->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(pr4);
+
+    // Softwares de tipo Navegador
+    Navegador* n1 = new Navegador("Nav1", "Microsoft", "12", 12);
+    n1->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(n1);
+
+    Navegador* n2 = new Navegador("Nav2", "Apple", "15", 30.99);
+    n2->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(n2);
+
+    // Softwares de tipo Seguridad
+    Seguridad* s1 = new Seguridad("s1", "SolSA", "13", 10, "Ramsomware");
+    s1->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(s1);
+
+    Seguridad* s2 = new Seguridad("s2", "SolSA", "12", 15, "Spyware");
+    s2->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(s2);
+
+    Seguridad* s3 = new Seguridad("s3", "Microsoft", "12", 20, "botnets");
+    s3->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(s3);
+
+    Seguridad* s4 = new Seguridad("s4", "YWY", "17", 19.85, "rootkits");
+    s4->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(s4);
+
+    Seguridad* s5 = new Seguridad("s5", "PIX9", "7", 4.75, "gusanos");
+    s5->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(s5);
+
+    Seguridad* s6 = new Seguridad("s6", "Ubuntu", "13", 5.50, "troyanos");
+    s6->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(s6);
+
+    // Softwares de tipo Social
+    Social* soc1 = new Social("soc1", "Microsoft", "+18", 2.99);
+    soc1->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(soc1);
+
+    Social* soc2 = new Social("soc2", "KOB", "12", 12.99);
+    soc2->establecerUsuarios(listaUsuarios);
+    listaSoftware.push_back(soc2);
     
-    Produccion pr1("pr1","YGO","+18",30.99,"Video");
-    pr1.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&pr1);
     
-    Produccion pr2("pr2","ZGR","+18",22,"Musica");
-    pr2.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&pr2);
 
-    Produccion pr3("pr3","CROSSYX","+18",50.50,"Streaming");
-    pr3.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&pr3);
-
-    Produccion pr4("pr4","NOIP","+18",7.25,"Fotos");
-    pr4.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&pr4);
-
-    //Se crea 2 Softwares de tipo Navegador
-
-    Navegador n1("Nav1","Microsoft","12",12);
-    n1.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&n1);
-
-    Navegador n2("Nav2","Apple","15",30.99);
-    n2.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&n2);
-
-    //Se crean 6 Softwares de Seguridad
-
-    Seguridad s1("s1","SolSA","13",10,"Ramsomware");
-    s1.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&s1);
-
-    Seguridad s2("s2","SolSA","12",15,"Spyware");
-    s2.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&s2);
-
-    Seguridad s3("s3","Microsoft","12",20,"botnets");
-    s3.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&s3);
-
-    Seguridad s4("s4","YWY","17",19.85,"rootkits");
-    s4.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&s4);
-
-    Seguridad s5("s5","PIX9","7",4.75,"gusanos");
-    s5.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&s5);
-
-    Seguridad s6("s6","Ubuntu","13",5.50,"troyanos");
-    s6.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&s6);
-
-    //Se crean 2 softwares de tipo social
-    Social soc1("soc1","Microsoft","+18",2.99);
-    soc1.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&soc1);
-
-    Social soc2("soc2","KOB","12",12.99);
-    soc1.establecerUsuarios(listaUsuarios);
-    listaSoftware.push_back(&soc1);
+    cout<<"Softwares creados en la base de datos con exito!"<<endl;
 
 
-    for (const Software* software : listaSoftware) {
-        software->mostrarInformacion(); // Usamos el operador -> para acceder a métodos en punteros
-    }
+    
  
 }
 
 void mostrarInformacionSoftwares(vector<Software*>& listaSoftware){
-   
+   for (const Software* software : listaSoftware) {
+        software->mostrarInformacion(); // Usamos el operador -> para acceder a métodos en punteros
+    }
 }
+
+bool iniciarSesion(const list<Usuario>& listaUsuarios,vector<Software*>& listaSoftware) {
+   bool continuarSesion = true; // Variable para controlar si se debe continuar la sesión
+
+    while (continuarSesion) {
+        string nombreUsuario;
+        string contrasena;
+
+        cout << "Ingrese el nombre de usuario (o escriba 'salir' para salir): ";
+        cin >> nombreUsuario;
+
+        if (nombreUsuario == "salir") {
+            break; // Salir del bucle principal si se ingresa 'salir'
+        }
+
+        cout << "Ingrese la contraseña: ";
+        cin >> contrasena;
+
+        bool accesoCorrecto = false; // Variable para controlar si el acceso es correcto
+
+        for (const Usuario& usuario : listaUsuarios) {
+            if (usuario.getNombre() == nombreUsuario && usuario.getContrasena() == contrasena) {
+                cout << "Acceso concedido. Bienvenido, " << nombreUsuario << "!" << endl;
+                if (usuario.getLog()) {
+                    
+                    menuAdmin(listaSoftware,listaUsuarios);
+                    
+                } else {
+                    
+                }
+                accesoCorrecto = true;
+                break;
+            }
+        }
+
+        if (!accesoCorrecto) {
+            cout << "Usuario o contraseña incorrectos. Intente nuevamente." << endl;
+        } else {
+        // Pregunta si desea ingresar con otro usuario o salir
+            char opcion;
+            cout << "¿Desea ingresar con otro usuario? (S para si, cualquier otra tecla para salir): ";
+            cin >> opcion;
+            if (opcion != 'S' && opcion != 's') {
+                continuarSesion = false; 
+            }
+        }
+    }   
+}
+
+void menuAdmin(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuarios) {
+    cout << "Seleccione el tipo de software que desea utilizar:" << endl;
+    cout << "1. Juego" << endl;
+    cout << "2. Ofimatica" << endl;
+    cout << "3. Produccion" << endl;
+    cout << "4. Navegador" << endl;
+    cout << "5. Seguridad" << endl;
+    cout << "6. Social" << endl;
+    cout << "7. Actualizar" << endl;
+
+    int opcion;
+    cin >> opcion;
+
+    // Validar la entrada del usuario
+    while (opcion < 1 || opcion > 7) {
+        cout << "Opción inválida. Por favor, seleccione una opción válida del 1 al 7:" << endl;
+        cin >> opcion;
+    }
+
+    
+    string tipoSoftware;
+    string nombreOfimatica;
+
+    int cantidadArchivos;
+
+    string nombreProduccion;
+
+    string nombreNavegador;
+    string nombrePagina;
+
+    switch (opcion) {
+        case 1:
+            tipoSoftware = "Juego";
+            cout<<"Juegos disponibles en la bibloteca: "<<endl;
+            for (Software* software : listaSoftware) {
+                if (Juego* juego = dynamic_cast<Juego*>(software)) {   
+                    juego->mostrarInformacion();   
+                }
+                
+            }
+            cout<<endl;
+            break;
+        case 2:
+            
+            cout << "Ingrese el nombre de la Ofimática: ";
+            cin >> nombreOfimatica;
+            cout << "Ingrese la cantidad de archivos a agregar: ";
+            cin >> cantidadArchivos;
+    
+            
+
+            for (Software* software : listaSoftware) {
+                if (Ofimatica* ofimatica = dynamic_cast<Ofimatica*>(software)) {
+                    if (ofimatica->getNombre() == nombreOfimatica) {
+                        ofimatica->agregarCantArchivos(cantidadArchivos);
+                        cout << "Se agregaron " << cantidadArchivos << " archivos a " << nombreOfimatica << endl;
+                        ofimatica->mostrarInformacion();
+                    }
+                    
+                }
+                
+            }
+            
+            cout<<endl;
+            break;
+        case 3:
+            cout << "Ingrese el nombre de produccion: ";
+            cin >> nombreProduccion;
+            tipoSoftware = "Produccion";
+
+            for (Software* software : listaSoftware) {
+                if (Produccion* produccionSoftware = dynamic_cast<Produccion*>(software)) {
+                    if (produccionSoftware->getNombre() == nombreProduccion) {
+                        cout << "Se está usando la produccion " << nombreProduccion << " de tipo " << produccionSoftware->getSolucion() << endl;
+                    }
+                }
+            }
+            break;
+        case 4:
+            cout << "Ingrese el nombre de Navegador: ";
+            cin >> nombreNavegador;
+            cout<< nombreNavegador<<endl;
+    for (Software* software : listaSoftware) {
+        if (Navegador* nomNav = dynamic_cast<Navegador*>(software)) {
+            if (nomNav->getNombre() == nombreNavegador) {
+                cout << "Detectado un navegador con el nombre ingresado." << endl;
+                
+                cout << "Ingrese nombre de la pagina web: ";
+                cin >> nombrePagina;
+
+                nomNav->agregarPaginaAlHistorial(nombrePagina);
+                nomNav->mostrarUltimas10Paginas();
+            }
+        }
+    }
+
+            break;
+        case 5:
+            tipoSoftware = "Seguridad";
+            break;
+        case 6:
+            tipoSoftware = "Social";
+            break;
+        case 7:
+            mostrarInformacionSoftwares(listaSoftware);
+            break;
+    }
+
+
+    
+}
+
+
 

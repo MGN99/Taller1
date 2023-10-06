@@ -17,7 +17,7 @@ public:
     void setGenero(string);
 
     void mostrarInformacion() const override {
-        cout << "Nombre: " << nombre << ", Tipo: Juego" << "Género: " << genero<< endl;
+        cout << "Nombre: " << nombre << ", Tipo: Juego" << ", Genero: " << genero<< endl;
         
     }
 

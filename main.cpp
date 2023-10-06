@@ -2,6 +2,10 @@
 #include "Usuario.h"
 #include "Software.h"
 #include "Juego.h"
+#include "Ofimatica.h"
+#include "Produccion.h"
+#include "Navegador.h"
+#include "Seguridad.h"
 #include <vector>
 #include <list>
 using namespace std;
@@ -61,8 +65,9 @@ int main()
 
     Juego juego1("a","epic","+18",99.9,"Gore");
     listaSoftware.push_back(&juego1);
-
     juego1.establecerUsuarios(listaUsuarios);
+
+    //Imprimir la lista de Softwares
 
     for (const Software* software : listaSoftware) {
         software->mostrarInformacion(); // Usamos el operador -> para acceder a métodos en punteros

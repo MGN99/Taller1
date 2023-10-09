@@ -15,6 +15,8 @@ public:
 
     void agregarUsuario(Usuario usuario);
     void mostrarInformacion() const override;
+    
+    
 
 };
 
@@ -34,4 +36,6 @@ public:
         for (const Usuario& usuario : amigos) {
             cout << "Nombre del usuario: " << usuario.getNombre() << endl;
         }
-}
+    }
+
+    

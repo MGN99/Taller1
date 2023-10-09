@@ -19,9 +19,12 @@ void poblarBaseDeDatosSoftware(vector<Software*>&,const list<Usuario>&);
 void mostrarInformacionSoftwares(vector<Software*>&);
 bool iniciarSesion(const list<Usuario>&,vector<Software*>&);
 void menuAdmin(vector<Software*>&,const list<Usuario>&);
+void menuNormal(vector<Software*>&,const list<Usuario>&);
+void menuNino(vector<Software*>&,const list<Usuario>&);
 
 int main()
-{
+{   
+    
     // Creamos una lista para almacenar los usuarios
     list<Usuario> listaUsuarios;
     //Creamos una lista para guardar los softwares 
@@ -34,7 +37,7 @@ int main()
 
     // Se pobla la base de datos con softwares
     poblarBaseDeDatosSoftware(listaSoftware,listaUsuarios);
-    //mostrarInformacionSoftwares(listaSoftware);
+    
 
     iniciarSesion(listaUsuarios,listaSoftware);
 
@@ -283,7 +286,7 @@ bool iniciarSesion(const list<Usuario>& listaUsuarios,vector<Software*>& listaSo
             break; // Salir del bucle principal si se ingresa 'salir'
         }
 
-        cout << "Ingrese la contraseña: ";
+        cout << "Ingrese la contrasena: ";
         cin >> contrasena;
 
         bool accesoCorrecto = false; // Variable para controlar si el acceso es correcto
@@ -291,12 +294,16 @@ bool iniciarSesion(const list<Usuario>& listaUsuarios,vector<Software*>& listaSo
         for (const Usuario& usuario : listaUsuarios) {
             if (usuario.getNombre() == nombreUsuario && usuario.getContrasena() == contrasena) {
                 cout << "Acceso concedido. Bienvenido, " << nombreUsuario << "!" << endl;
+                 
                 if (usuario.getLog()) {
                     
                     menuAdmin(listaSoftware,listaUsuarios);
                     
-                } else {
-                    
+                } else if (!usuario.getLog() && !usuario.getCorreo().empty()) {
+                    menuNormal(listaSoftware, listaUsuarios);
+                }
+                else{
+                    menuNino(listaSoftware,listaUsuarios);
                 }
                 accesoCorrecto = true;
                 break;
@@ -318,6 +325,8 @@ bool iniciarSesion(const list<Usuario>& listaUsuarios,vector<Software*>& listaSo
 }
 
 void menuAdmin(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuarios) {
+    Social* softwareSocial = nullptr;
+
     cout << "Seleccione el tipo de software que desea utilizar:" << endl;
     cout << "1. Juego" << endl;
     cout << "2. Ofimatica" << endl;
@@ -347,7 +356,12 @@ void menuAdmin(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuar
     string nombreNavegador;
     string nombrePagina;
 
-    switch (opcion) {
+    string nombreSeguridad;
+
+    string nombreSocial;
+    string nombreAmigo;
+
+    switch (opcion){
         case 1:
             tipoSoftware = "Juego";
             cout<<"Juegos disponibles en la bibloteca: "<<endl;
@@ -398,36 +412,333 @@ void menuAdmin(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuar
         case 4:
             cout << "Ingrese el nombre de Navegador: ";
             cin >> nombreNavegador;
-            cout<< nombreNavegador<<endl;
-    for (Software* software : listaSoftware) {
-        if (Navegador* nomNav = dynamic_cast<Navegador*>(software)) {
-            if (nomNav->getNombre() == nombreNavegador) {
-                cout << "Detectado un navegador con el nombre ingresado." << endl;
+           
+            for (Software* software : listaSoftware) {
+                if (Navegador* nomNav = dynamic_cast<Navegador*>(software)) {
+                    if (nomNav->getNombre() == nombreNavegador) {
+                        cout << "Detectado un navegador con el nombre ingresado." << endl;
                 
-                cout << "Ingrese nombre de la pagina web: ";
-                cin >> nombrePagina;
+                        cout << "Ingrese nombre de la pagina web: ";
+                        cin >> nombrePagina;
 
-                nomNav->agregarPaginaAlHistorial(nombrePagina);
-                nomNav->mostrarUltimas10Paginas();
+                        nomNav->agregarPaginaAlHistorial(nombrePagina);
+                        nomNav->mostrarUltimas10Paginas();
+                    }
+                }
             }
-        }
-    }
 
             break;
         case 5:
-            tipoSoftware = "Seguridad";
+            cout << "Ingrese el nombre del Malware contra el cual quiere activar el software de Seguridad: ";
+            cin >> nombreSeguridad;
+            for (Software* software : listaSoftware) {
+                if (Seguridad* nomSeg = dynamic_cast<Seguridad*>(software)) {
+                    if (nomSeg->getMalware() == nombreSeguridad) {
+                        cout << "Se ha encontrado un software de seguridad contra el malware ingresado." << endl;
+                
+                        cout << "Activando....."<<endl;
+                        cout << "Software de seguridad activado contra "<<nombreSeguridad<<endl;
+                        
+                    }
+                }
+            }
             break;
         case 6:
-            tipoSoftware = "Social";
+            cout << "Ingrese el nombre de la red Social: ";
+            cin >> nombreSocial;
+
+            for (Software* software : listaSoftware) {
+                if (Social* nomSoc = dynamic_cast<Social*>(software)) {
+                    if (nomSoc->getNombre() == nombreSocial) {
+                        cout << "Detectado una red social con el nombre ingresado." << endl;
+
+                        cout << "Ingrese el nombre del usuario que desea agregar como amigo: ";
+                        cin >> nombreAmigo;
+
+                        // Recorrer la lista general de usuarios y agregar al amigo si se encuentra
+                        for (const Usuario& usuario : listaUsuarios) {
+                            if (usuario.getNombre() == nombreAmigo) {
+                                nomSoc->agregarUsuario(usuario);
+                                cout << "Se ha agregado a " << nombreAmigo << " como amigo." << endl;
+                                break; // Se encontró el usuario, salir del bucle
+                            }
+                        }
+
+                        nomSoc->mostrarInformacion();
+                    }
+                }
+            }
             break;
+       
         case 7:
             mostrarInformacionSoftwares(listaSoftware);
             break;
+        
+    }
+}
+
+void menuNormal(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuarios) {
+    cout << "Seleccione el tipo de software que desea utilizar:" << endl;
+    cout << "1. Juego" << endl;
+    cout << "2. Ofimatica" << endl;
+    cout << "3. Produccion" << endl;
+    cout << "4. Navegador" << endl;
+    cout << "5. Social" << endl;
+    cout << "6. Actualizar" << endl;
+
+    int opcion;
+    cin >> opcion;
+
+    // Validar la entrada del usuario
+    while (opcion < 1 || opcion > 6) {
+        cout << "Opción inválida. Por favor, seleccione una opción válida del 1 al 6:" << endl;
+        cin >> opcion;
     }
 
+    string tipoSoftware;
+    string nombreOfimatica;
 
+    int cantidadArchivos;
+
+    string nombreProduccion;
+
+    string nombreNavegador;
+    string nombrePagina;
+
+    string nombreSocial;
+    string nombreAmigo;
+
+    switch (opcion){
+        case 1:
+            tipoSoftware = "Juego";
+            cout<<"Juegos disponibles en la bibloteca: "<<endl;
+            for (Software* software : listaSoftware) {
+                if (Juego* juego = dynamic_cast<Juego*>(software)) {   
+                    juego->mostrarInformacion();   
+                }
+                
+            }
+            cout<<endl;
+            break;
+        case 2:
+            
+            cout << "Ingrese el nombre de la Ofimática: ";
+            cin >> nombreOfimatica;
+            cout << "Ingrese la cantidad de archivos a agregar: ";
+            cin >> cantidadArchivos;
     
+            
+
+            for (Software* software : listaSoftware) {
+                if (Ofimatica* ofimatica = dynamic_cast<Ofimatica*>(software)) {
+                    if (ofimatica->getNombre() == nombreOfimatica) {
+                        ofimatica->agregarCantArchivos(cantidadArchivos);
+                        cout << "Se agregaron " << cantidadArchivos << " archivos a " << nombreOfimatica << endl;
+                        ofimatica->mostrarInformacion();
+                    }
+                    
+                }
+                
+            }
+            
+            cout<<endl;
+            break;
+        case 3:
+            cout << "Ingrese el nombre de produccion: ";
+            cin >> nombreProduccion;
+            tipoSoftware = "Produccion";
+
+            for (Software* software : listaSoftware) {
+                if (Produccion* produccionSoftware = dynamic_cast<Produccion*>(software)) {
+                    if (produccionSoftware->getNombre() == nombreProduccion) {
+                        cout << "Se está usando la produccion " << nombreProduccion << " de tipo " << produccionSoftware->getSolucion() << endl;
+                    }
+                }
+            }
+            break;
+        case 4:
+            cout << "Ingrese el nombre de Navegador: ";
+            cin >> nombreNavegador;
+           
+            for (Software* software : listaSoftware) {
+                if (Navegador* nomNav = dynamic_cast<Navegador*>(software)) {
+                    if (nomNav->getNombre() == nombreNavegador) {
+                        cout << "Detectado un navegador con el nombre ingresado." << endl;
+                
+                        cout << "Ingrese nombre de la pagina web: ";
+                        cin >> nombrePagina;
+
+                        nomNav->agregarPaginaAlHistorial(nombrePagina);
+                        nomNav->mostrarUltimas10Paginas();
+                    }
+                }
+            }
+
+            break;
+        
+        case 5:
+            cout << "Ingrese el nombre de la red Social: ";
+            cin >> nombreSocial;
+
+            for (Software* software : listaSoftware) {
+                if (Social* nomSoc = dynamic_cast<Social*>(software)) {
+                    if (nomSoc->getNombre() == nombreSocial) {
+                        cout << "Detectado una red social con el nombre ingresado." << endl;
+
+                        cout << "Ingrese el nombre del usuario que desea agregar como amigo: ";
+                        cin >> nombreAmigo;
+
+                        // Recorrer la lista general de usuarios y agregar al amigo si se encuentra
+                        for (const Usuario& usuario : listaUsuarios) {
+                            if (usuario.getNombre() == nombreAmigo) {
+                                nomSoc->agregarUsuario(usuario);
+                                cout << "Se ha agregado a " << nombreAmigo << " como amigo." << endl;
+                                break; // Se encontró el usuario, salir del bucle
+                            }
+                        }
+
+                        nomSoc->mostrarInformacion();
+                    }
+                }
+            }
+            break;
+       
+        case 6:
+            mostrarInformacionSoftwares(listaSoftware);
+            break;
+        
+    }
 }
+
+void menuNino(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuarios) {
+    cout << "Seleccione el tipo de software que desea utilizar:" << endl;
+    cout << "1. Juego" << endl;
+    cout << "2. Ofimatica" << endl;
+    cout << "3. Navegador" << endl;
+    cout << "4. Social" << endl;
+    cout << "5. Actualizar" << endl;
+
+    int opcion;
+    cin >> opcion;
+
+    // Validar la entrada del usuario
+    while (opcion < 1 || opcion > 5) {
+        cout << "Opción inválida. Por favor, seleccione una opción válida del 1 al 5:" << endl;
+        cin >> opcion;
+    }
+
+    string tipoSoftware;
+    string nombreOfimatica;
+
+    int cantidadArchivos;
+
+    string nombreProduccion;
+
+    string nombreNavegador;
+    string nombrePagina;
+
+    string nombreSocial;
+    string nombreAmigo;
+
+    switch (opcion){
+        case 1:
+            tipoSoftware = "Juego";
+            cout<<"Juegos disponibles en la bibloteca: "<<endl;
+            for (Software* software : listaSoftware) {
+                if (Juego* juego = dynamic_cast<Juego*>(software)) {   
+                    juego->mostrarInformacion();   
+                }
+                
+            }
+            cout<<endl;
+            break;
+        case 2:
+            
+            cout << "Ingrese el nombre de la Ofimática: ";
+            cin >> nombreOfimatica;
+            cout << "Ingrese la cantidad de archivos a agregar: ";
+            cin >> cantidadArchivos;
+    
+            
+
+            for (Software* software : listaSoftware) {
+                if (Ofimatica* ofimatica = dynamic_cast<Ofimatica*>(software)) {
+                    if (ofimatica->getNombre() == nombreOfimatica) {
+                        ofimatica->agregarCantArchivos(cantidadArchivos);
+                        cout << "Se agregaron " << cantidadArchivos << " archivos a " << nombreOfimatica << endl;
+                        ofimatica->mostrarInformacion();
+                    }
+                    
+                }
+                
+            }
+            
+            cout<<endl;
+            break;
+        
+        case 3:
+            cout << "Ingrese el nombre de Navegador: ";
+            cin >> nombreNavegador;
+           
+            for (Software* software : listaSoftware) {
+                if (Navegador* nomNav = dynamic_cast<Navegador*>(software)) {
+                    if (nomNav->getNombre() == nombreNavegador) {
+                        cout << "Detectado un navegador con el nombre ingresado." << endl;
+                
+                        cout << "Ingrese nombre de la pagina web: ";
+                        cin >> nombrePagina;
+
+                        nomNav->agregarPaginaAlHistorial(nombrePagina);
+                        nomNav->mostrarUltimas10Paginas();
+                    }
+                }
+            }
+
+            break;
+        
+        case 4:
+            cout << "Ingrese el nombre de la red Social: ";
+            cin >> nombreSocial;
+
+            
+
+            for (Software* software : listaSoftware) {
+                if (Social* nomSoc = dynamic_cast<Social*>(software)) {
+                    if (nomSoc->getNombre() == nombreSocial) {
+                        cout << "Detectado una red social con el nombre ingresado." << endl;
+
+                        cout << "Ingrese el nombre del usuario que desea agregar como amigo: ";
+                        cin >> nombreAmigo;
+
+                        // Recorrer la lista general de usuarios y agregar al amigo si se encuentra
+                        for (const Usuario& usuario : listaUsuarios) {
+                            // Verificar si el usuario actual coincide con el nombre ingresado y cumple con las condiciones
+                            if (usuario.getNombre() == nombreAmigo && usuario.getCorreo() == "" && !usuario.getLog()) {
+                                nomSoc->agregarUsuario(usuario);
+                                cout << "Se ha agregado a " << nombreAmigo << " como amigo." << endl;
+                                
+                                break; // Se encontró el usuario, salir del bucle
+                            }
+                        }
+                        cout << "Solo se pueden agregar usuarios tipo nino como amigos en esta red social." << endl;
+                        
+
+                        nomSoc->mostrarInformacion();
+                        break; // Salir del bucle después de procesar la red social
+                    }
+                }
+            }
+
+            break;
+       
+        case 5:
+            mostrarInformacionSoftwares(listaSoftware);
+            break;
+        
+    }
+}
+    
+
 
 
 

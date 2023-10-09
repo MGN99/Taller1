@@ -9,6 +9,7 @@
 #include "Social.h"
 #include <vector>
 #include <list>
+#include <algorithm>
 using namespace std;
 
 
@@ -21,6 +22,7 @@ bool iniciarSesion(const list<Usuario>&,vector<Software*>&);
 void menuAdmin(vector<Software*>&,const list<Usuario>&);
 void menuNormal(vector<Software*>&,const list<Usuario>&);
 void menuNino(vector<Software*>&,const list<Usuario>&);
+bool eliminarSoftware(vector<Software*>& ,const list<Usuario>&);
 
 int main()
 {   
@@ -325,7 +327,7 @@ bool iniciarSesion(const list<Usuario>& listaUsuarios,vector<Software*>& listaSo
 }
 
 void menuAdmin(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuarios) {
-    Social* softwareSocial = nullptr;
+    
 
     cout << "Seleccione el tipo de software que desea utilizar:" << endl;
     cout << "1. Juego" << endl;
@@ -335,12 +337,13 @@ void menuAdmin(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuar
     cout << "5. Seguridad" << endl;
     cout << "6. Social" << endl;
     cout << "7. Actualizar" << endl;
+    cout << "8. Eliminar Software" << endl;
 
     int opcion;
     cin >> opcion;
 
     // Validar la entrada del usuario
-    while (opcion < 1 || opcion > 7) {
+    while (opcion < 1 || opcion > 8) {
         cout << "Opción inválida. Por favor, seleccione una opción válida del 1 al 7:" << endl;
         cin >> opcion;
     }
@@ -473,6 +476,9 @@ void menuAdmin(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuar
         case 7:
             mostrarInformacionSoftwares(listaSoftware);
             break;
+
+        case 8:
+            eliminarSoftware(listaSoftware,listaUsuarios);
         
     }
 }
@@ -485,12 +491,13 @@ void menuNormal(vector<Software*>& listaSoftware, const list<Usuario>& listaUsua
     cout << "4. Navegador" << endl;
     cout << "5. Social" << endl;
     cout << "6. Actualizar" << endl;
+    cout << "7. Eliminar Software" << endl;
 
     int opcion;
     cin >> opcion;
 
     // Validar la entrada del usuario
-    while (opcion < 1 || opcion > 6) {
+    while (opcion < 1 || opcion > 7) {
         cout << "Opción inválida. Por favor, seleccione una opción válida del 1 al 6:" << endl;
         cin >> opcion;
     }
@@ -606,6 +613,9 @@ void menuNormal(vector<Software*>& listaSoftware, const list<Usuario>& listaUsua
         case 6:
             mostrarInformacionSoftwares(listaSoftware);
             break;
+
+        case 7:
+            eliminarSoftware(listaSoftware,listaUsuarios);
         
     }
 }
@@ -617,13 +627,15 @@ void menuNino(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuari
     cout << "3. Navegador" << endl;
     cout << "4. Social" << endl;
     cout << "5. Actualizar" << endl;
+    cout << "6. Eliminar Software" << endl;
+    
 
     int opcion;
     cin >> opcion;
 
     // Validar la entrada del usuario
-    while (opcion < 1 || opcion > 5) {
-        cout << "Opción inválida. Por favor, seleccione una opción válida del 1 al 5:" << endl;
+    while (opcion < 1 || opcion > 6) {
+        cout << "Opción inválida. Por favor, seleccione una opción válida del 1 al 6:" << endl;
         cin >> opcion;
     }
 
@@ -734,8 +746,57 @@ void menuNino(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuari
         case 5:
             mostrarInformacionSoftwares(listaSoftware);
             break;
+
+        case 6:
+            eliminarSoftware(listaSoftware,listaUsuarios);
+            break;
+
         
     }
+}
+
+bool eliminarSoftware(vector<Software*>& listaSoftware, const list<Usuario>& listaUsuarios) {
+    string nombreEliminar;
+    cout << "Ingrese el nombre del software que desea eliminar: ";
+    cin >> nombreEliminar;
+
+    bool eliminar = true; // Variable para determinar si se debe eliminar el software
+
+    // Preguntar a cada usuario si autoriza la eliminación
+    for (const Usuario& usuario : listaUsuarios) {
+        char respuesta;
+        cout << "Usuario " << usuario.getNombre() << ", ¿autoriza la eliminacion del software? (S/N): ";
+        cin >> respuesta;
+
+        if (respuesta != 'S' && respuesta != 's') {
+            eliminar = false; // Si algún usuario no autoriza, no eliminar el software
+            break;
+        }
+    }
+
+    if (eliminar) {
+        // Buscar el software por nombre y eliminarlo
+        auto it = find_if(listaSoftware.begin(), listaSoftware.end(), [nombreEliminar](Software* software) {
+            return software->getNombre() == nombreEliminar;
+        });
+
+        if (it != listaSoftware.end()) {
+            // Liberar la memoria del software eliminado
+            delete *it;
+
+            // Eliminar el puntero de la lista de software
+            listaSoftware.erase(it);
+
+            cout << "El software '" << nombreEliminar << "' ha sido eliminado correctamente." << endl;
+        } else {
+            cout << "No se encontro ningun software con el nombre '" << nombreEliminar << "'. No se elimino ningún software." << endl;
+        }
+    } else {
+        cout << "No se autorizo la eliminacion del software." << endl;
+    }
+
+    
+    return eliminar;
 }
     
 

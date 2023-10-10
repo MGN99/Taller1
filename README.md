@@ -1,3 +1,7 @@
+Ruta de compilacion:"g++ -o main main.cpp"
+
+para ejecutar:"./main"
+
 // Se crea 1 usuario de tipo admin
     Usuario uA("Miguel", "123m", 24, "mgn@.com", true);
 
